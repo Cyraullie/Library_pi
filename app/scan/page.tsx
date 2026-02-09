@@ -30,6 +30,7 @@ export default function ScanPage() {
 
         if (res.ok) {
           const data = await res.json();
+          console.log(data)
           setBook(data);
         } else {
           console.log("Livre non trouvé");
@@ -46,13 +47,15 @@ export default function ScanPage() {
       scanner.clear().catch(() => {});
     };
   }, []);
-
+//TODO scan fonctionnel 
+//TODO pouvoir entrer un isbn tout seul et s'il est pas trouvé entré les infos 
   return (
     <main style={{ padding: 20 }}>
       <h1>Scanner un livre</h1>
-
+      {book}
+      <input type="text"></input>
+      <button>send</button>
       <div id="scanner" ref={scannerRef} />
-
       {book && (
         <div style={{ marginTop: 20 }}>
           <h2>{book.title}</h2>
