@@ -42,13 +42,14 @@ export default function MyBooksPage() {
 		{books.map((book) => (
 			<BookCard
 			key={book.id}
+			isbn={book.isbn}
 			title={book.title}
 			author={book.author}
 			image={book.image}
 			tome={book.tome}
 			read={book.read === 1}
 			rate={book.rate || undefined}
-			onClick={() => console.log("Click:", book.title)}
+			//onClick={() => console.log("Click:", book.title)}
 			/>
 		))}
 		</div>

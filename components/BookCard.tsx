@@ -2,34 +2,39 @@
 
 interface BookCardProps {
   title: string;
+  isbn:string;
   author: string;
   image: string;
   tome?: number;
   read?: boolean;
   rate?: number;
-  onClick?: () => void;
+  add?: number;
+  //onClick?: () => void;
 }
 
 export default function BookCard({
   title,
+  isbn,
   author,
   image,
   tome,
   read,
   rate,
-  onClick,
+  add,
+  //onClick,
 }: BookCardProps) {
   return (
     <div
-      onClick={onClick}
-      className="bg-white shadow rounded-xl overflow-hidden cursor-pointer hover:shadow-lg transition w-full h-[350px] flex flex-col"
+      //onClick={onClick}
+      className="bg-gray-800 shadow rounded-xl overflow-hidden hover:shadow-lg transition w-full h-[350px] flex flex-col"
+	  style={{ width: "250px", height: "400px"}}
     >
       {/* Image fixe en hauteur */}
-      <div className="h-48 w-full overflow-hidden">
+      <div className="h-55 overflow-hidden" style={{margin: "auto", marginTop: "15px", borderRadius: "5px"}}>
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover"
+          className="h-full"
         />
       </div>
 
@@ -54,6 +59,31 @@ export default function BookCard({
           {rate !== undefined && <p className="text-xs">⭐ {rate}/5</p>}
         </div>
       </div>
+	  {add !== undefined && (
+		<button
+			className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+			onClick={async () => {
+				const token = localStorage.getItem("token");
+				if (!token) return alert("Vous devez être connecté");
+
+				const res = await fetch("/api/me/books", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ isbn: isbn }),
+				});
+
+				const data = await res.json();
+				alert(data.message);
+			}}
+			>
+			Ajouter
+			</button>
+	  )}
+	  
+
     </div>
   );
 }

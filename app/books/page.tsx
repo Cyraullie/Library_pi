@@ -39,11 +39,13 @@ export default function CataloguePage() {
 		{books.map((book) => (
 			<BookCard
 			key={book.id}
+			isbn={book.isbn}
 			title={book.title}
 			author={book.author}
 			image={book.image}
 			tome={book.tome}
-			onClick={() => console.log("Click:", book.title)}
+			add={1}
+			//onClick={() => console.log("Click:", book.title)}
 			/>
 		))}
 		</div>

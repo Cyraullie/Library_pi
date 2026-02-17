@@ -76,7 +76,7 @@ export async function POST(
 
     // Ajouter le livre à l'utilisateur
     await db.query(
-		`INSERT INTO Users_has_Books (Users_id, Books_id, timestamp, \`read\`, rate, comment)
+		`INSERT INTO Users_has_Books (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
 		VALUES (?, ?, NOW(), ?, ?, ?)`,
       [userId, bookId, read, rate, comment]
     );
