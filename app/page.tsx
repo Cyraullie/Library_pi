@@ -1,20 +1,26 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
-	const [message, setMessage] = useState("");
+  return (
+    <main className="p-10">
+      <h1 className="text-4xl font-bold mb-4">
+        Bienvenue sur MyLibrary 📚
+      </h1>
 
+      <p className="text-gray-400 mb-8">
+        Gère ta collection de livres et mangas facilement.
+      </p>
 
-	function handleClick() {
-		console.log("increment like count");
-	}
+      <div className="flex gap-4 mb-10">
+        <Link href="/catalogue" className="bg-blue-600 px-6 py-3 rounded">
+          Voir le catalogue
+        </Link>
 
-	return (
-		<main>
-			
-			<h1>{message}</h1>
-			<button onClick={handleClick}>+</button>
-		</main>
-	);
+        <Link href="/me/books" className="bg-green-600 px-6 py-3 rounded">
+          Ma bibliothèque
+        </Link>
+
+      </div>
+    </main>
+  );
 }
