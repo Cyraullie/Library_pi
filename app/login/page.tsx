@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,13 +32,10 @@ export default function LoginPage() {
       return;
     }
 
-    // 🔐 Stocker le token
-    localStorage.setItem("token", data.token);
-
-    // (optionnel) stocker email ou username
-    localStorage.setItem("email", email);
+  
 
     // 🔁 Redirection
+    login(data.token)
     router.push("/me/books");
   };
 
