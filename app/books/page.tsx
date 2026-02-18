@@ -21,15 +21,40 @@ export default function CataloguePage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
+  const [addedBooks, setAddedBooks] = useState<number[]>([]);
+  
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
 
   useEffect(() => {
-    fetch("/api/books")
-      .then((res) => res.json())
-      .then((data) => {
-        setBooks(data);
-        setLoading(false);
-      });
-  }, []);
+    const loadData = async () => {
+      // 1️⃣ Catalogue
+      const resBooks = await fetch("/api/books");
+      const booksData = await resBooks.json();
+
+      // 2️⃣ Bibliothèque utilisateur
+      let myBooks: any[] = [];
+      if (token) {
+        const resMyBooks = await fetch("/api/me/books", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (resMyBooks.ok) {
+          myBooks = await resMyBooks.json();
+        }
+      }
+
+      setBooks(booksData);
+      setAddedBooks(myBooks.map((b) => b.id)); // ⚠️ id du livre
+      setLoading(false);
+    };
+
+    loadData();
+  }, [token]);
 
   if (loading) return <p className="p-6">Chargement...</p>;
 
@@ -42,6 +67,22 @@ export default function CataloguePage() {
 
     return matchesSearch && matchesType;
   });
+
+  const addToLibrary = async (bookId: number, isbn: string) => {
+      if (!token) return alert("Vous devez être connecté");
+
+      const res = await fetch("/api/me/books", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ isbn: isbn }),
+      });
+
+      const data = await res.json();
+    setAddedBooks((prev) => [...prev, bookId]);
+  };
 
   return (
     <main className="p-8">
@@ -74,12 +115,16 @@ export default function CataloguePage() {
         {filteredBooks.map((book) => (
           <BookCard
             key={book.id}
+            id={book.id}
             isbn={book.isbn}
             title={book.title}
             author={book.author}
             image={book.image}
             tome={book.tome}
             add={1} // bouton "Ajouter" possible
+            flipEnabled={false}
+            isAdded={addedBooks.includes(book.id)}
+            onAdd={() => addToLibrary(book.id, book.isbn)}
           />
         ))}
 

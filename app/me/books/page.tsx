@@ -38,19 +38,25 @@ export default function MyBooksPage() {
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-8">Ma bibliothèque</h1>
 
+		
+
 		<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 		{books.map((book) => (
 			<BookCard
 			key={book.id}
+            id={book.id}
 			isbn={book.isbn}
 			title={book.title}
 			author={book.author}
 			image={book.image}
 			tome={book.tome}
-			read={book.read === 1}
+			read={book.read}
 			rate={book.rate || undefined}
+			comment={book.comment}
+			flipEnabled={true}
 			//onClick={() => console.log("Click:", book.title)}
 			/>
+			
 		))}
 		</div>
 
