@@ -29,13 +29,16 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
     }
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET n'est pas défini dans .env");
+    }
 
-  // Générer un JWT
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
-      JWT_SECRET,
+      process.env.JWT_SECRET, // TypeScript sait maintenant que c'est défini
       { expiresIn: "7d" }
     );
+
 
     return NextResponse.json({ message: "Utilisateur créé avec succès", token  }, { status: 201 });
   } catch (error: any) {

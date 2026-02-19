@@ -35,7 +35,7 @@ export default function CataloguePage() {
       const booksData = await resBooks.json();
 
       // 2️⃣ Bibliothèque utilisateur
-      let myBooks: any[] = [];
+      let myBooks: Book[] = [];
       if (token) {
         const resMyBooks = await fetch("/api/me/books", {
           headers: {
@@ -116,12 +116,10 @@ export default function CataloguePage() {
           <BookCard
             key={book.id}
             id={book.id}
-            isbn={book.isbn}
             title={book.title}
             author={book.author}
             image={book.image}
             tome={book.tome}
-            add={1} // bouton "Ajouter" possible
             flipEnabled={false}
             isAdded={addedBooks.includes(book.id)}
             onAdd={() => addToLibrary(book.id, book.isbn)}

@@ -10,7 +10,7 @@ export async function GET(req: Request) {
     }
 
     const token = auth.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
 
     const userId = decoded.id;
 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     }
 
     const token = auth.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
     const userId = decoded.id; // ou decoded.userId selon ton token
 
     const { isbn, read = 0, rate = null, comment = null } = await req.json();

@@ -27,12 +27,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
     }
 
-    // Générer un JWT
-    const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET n'est pas défini dans .env");
+  }
+
+  const token = jwt.sign(
+    { id: user.id, username: user.username, email: user.email },
+    process.env.JWT_SECRET, // TypeScript sait maintenant que c'est défini
+    { expiresIn: "7d" }
+  );
+
 
     return NextResponse.json({ message: "Login réussi", token });
   } catch (error) {

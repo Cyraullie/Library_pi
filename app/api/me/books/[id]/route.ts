@@ -12,7 +12,7 @@ export async function DELETE(
     if (!authHeader) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const token = authHeader.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
     const userId = decoded.id || decoded.userId;
 
     const { id } = await params; // ⚠️ unwrap
@@ -43,7 +43,7 @@ export async function PATCH(
     }
 
     const token = authHeader.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
     const userId = decoded.id || decoded.userId;
 
     const { id } = await params; // ⚠️ unwrap
