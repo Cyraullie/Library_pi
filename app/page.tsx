@@ -12,7 +12,7 @@ export default function Home() {
       </p>
 
       <div className="flex gap-4 mb-10">
-        <Link href="/catalogue" className="bg-blue-600 px-6 py-3 rounded">
+        <Link href="/books" className="bg-blue-600 px-6 py-3 rounded">
           Voir le catalogue
         </Link>
 
