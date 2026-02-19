@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS `library_pi`.`Books` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE,
   UNIQUE INDEX `isbn_UNIQUE` (`isbn` ASC) VISIBLE,
-  UNIQUE INDEX `title_UNIQUE` (`title` ASC) VISIBLE,
   INDEX `fk_Books_BookType_idx` (`BookType_id` ASC) VISIBLE,
   CONSTRAINT `fk_Books_BookType`
     FOREIGN KEY (`BookType_id`)
@@ -101,6 +100,3 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 INSERT INTO `library_pi`.`BookType` (`type`) VALUES ('livre');
 INSERT INTO `library_pi`.`BookType` (`type`) VALUES ('manga');
 INSERT INTO `library_pi`.`BookType` (`type`) VALUES ('BD');
-INSERT INTO `library_pi`.`BookType` (`type`) VALUES ('comics');
-
-INSERT INTO `library_pi`.`Books` (`isbn`, `title`, `author`, `image`, `publicationDate`, `editor`, `langage`, `tome`, `BookType_id`) VALUES ('9782818936238', 'The rising of the shield herr', 'Aneko Yusagi', 'https://static.fnac-static.com/multimedia/PE/Images/FR/NR/2f/40/78/7880751/1540-1/tsp20260102100107/The-Rising-of-the-Shield-Hero-vol-01.jpg', '2013-08-22', 'Bamboo Eds', 'fr', '1', '2');
