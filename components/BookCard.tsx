@@ -165,65 +165,90 @@ export default function BookCard({
         {/* FACE ARRIÈRE (UNIQUEMENT BIBLIOTHÈQUE) */}
         {flipEnabled && (
           <div
-            className="absolute w-full h-full bg-gray-800 text-white p-4 rounded-xl"
+            className="absolute w-full h-full bg-gradient-to-br from-gray-900 to-gray-800 text-white p-5 rounded-xl flex flex-col"
             style={{
               transform: "rotateY(180deg)",
               backfaceVisibility: "hidden",
             }}
           >
-            <h3 className="font-bold mb-2">Modifier</h3>
+            <h3 className="font-semibold text-lg mb-4 text-center">
+              Modifier le livre
+            </h3>
 
-            <label className="text-sm">Statut</label>
-            <select
-              value={newRead}
-              onChange={(e) => setNewRead(Number(e.target.value))}
-              className="w-full mb-2 text-black"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <option value={0}>À lire</option>
-              <option value={1}>Lu</option>
-            </select>
+            {/* Statut */}
+            <div className="mb-3">
+              <label className="text-xs text-gray-400">Statut</label>
+              <select
+                value={newRead}
+                onChange={(e) => setNewRead(Number(e.target.value))}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full mt-1 bg-gray-700 text-white rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              >
+                <option value={0}>À lire</option>
+                <option value={1}>Lu</option>
+              </select>
+            </div>
 
-            <label className="text-sm">Note</label>
-            <input
-              type="number"
-              min="0"
-              max="5"
-              value={newRate}
-              onChange={(e) => setNewRate(Number(e.target.value))}
-              className="w-full mb-2 text-black"
-              onClick={(e) => e.stopPropagation()}
-            />
+            {/* Note en étoiles */}
+            <div className="mb-3">
+              <label className="text-xs text-gray-400">Note</label>
+              <div
+                className="flex gap-1 mt-1"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setNewRate(star)}
+                    className={`text-xl transition ${
+                      star <= newRate ? "text-yellow-400" : "text-gray-500"
+                    }`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <label className="text-sm">Commentaire</label>
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="w-full mb-2 text-black"
-              onClick={(e) => e.stopPropagation()}
-            />
+            {/* Commentaire */}
+            <div className="mb-4 flex-1">
+              <label className="text-xs text-gray-400">Commentaire</label>
+              <textarea
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full mt-1 bg-gray-700 text-white rounded-md px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500"
+                rows={3}
+                placeholder="Ajouter un commentaire..."
+              />
+            </div>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                updateBook();
-              }}
-              className="w-full bg-green-600 py-1 rounded mb-2"
-            >
-              Sauvegarder
-            </button>
+            {/* Boutons */}
+            <div className="flex gap-2 mt-auto">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  updateBook();
+                }}
+                className="flex-1 bg-green-600 hover:bg-green-500 transition py-2 rounded-md text-sm font-medium"
+              >
+                Sauvegarder
+              </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteBook(id);
-              }}
-              className="w-full bg-red-600 py-1 rounded"
-            >
-              Supprimer
-            </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteBook(id);
+                }}
+                className="flex-1 bg-red-600 hover:bg-red-500 transition py-2 rounded-md text-sm font-medium"
+              >
+                Supprimer
+              </button>
+            </div>
           </div>
         )}
+
       </div>
     </div>
   );
