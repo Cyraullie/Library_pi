@@ -114,7 +114,10 @@ export default function BookCard({
           {!flipEnabled && (
             <div
               className={`absolute inset-0 flex items-center justify-center bg-black/40 text-white text-6xl font-bold transition-opacity duration-200
-                ${hovered || isAdded ? "opacity-100" : "opacity-0"}`}
+                ${hovered || isAdded ? "opacity-100" : "opacity-0"}
+                 ${!isAdded ? "cursor-pointer" : "cursor-default"}`}
+                
+
             >
               <button
                 onClick={(e) => {
