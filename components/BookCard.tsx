@@ -131,20 +131,33 @@ export default function BookCard({
             </div>
           )}
 
+           {flipEnabled && (
+              <p
+                className={`text-xs font-bold ${
+                  newRead ? "text-green-400" : "text-yellow-400"
+                }`}
+                style={{
+                  position: "absolute",
+                  top: 10,
+                  right: 20,
+                  fontSize: 25,
+                  borderRadius: 50,
+                  textAlign: "center",
+                  height: 47,
+                  width: 47,
+                  padding: 5,
+                  backgroundColor: newRead ? "lightgreen" : "yellow",
+                }}
+              >
+                {newRead ? "✓" : "⏱️"}
+              </p>
+            )}
           <div className="absolute bottom-0 w-full bg-black/70 p-3">
             <h2 className="font-bold text-sm">{title}</h2>
             <p className="text-xs text-gray-300">{author}</p>
             {tome && <p className="text-xs">Tome {tome}</p>}
 
-            {flipEnabled && (
-              <p
-                className={`text-xs font-bold ${
-                  newRead ? "text-green-400" : "text-yellow-400"
-                }`}
-              >
-                {newRead ? "Lu" : "À lire"}
-              </p>
-            )}
+           
 
           </div>
         </div>

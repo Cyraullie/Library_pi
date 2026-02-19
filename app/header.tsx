@@ -28,7 +28,7 @@ export default function Header() {
           <Link href="/login">Login</Link>
         ) : (
           <>
-            <Link href="/profile">profil</Link>
+            <Link href="/profile">Profil</Link>
             <button
               onClick={handleLogout}
               className="bg-red-500 px-3 py-1 rounded"

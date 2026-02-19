@@ -20,6 +20,7 @@ export async function GET(req: Request) {
         Books.title,
         Books.author,
         Books.image,
+        Books.tome,
         Users_has_Books.read,
         Users_has_Books.rate
       FROM Users_has_Books
