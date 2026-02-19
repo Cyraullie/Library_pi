@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET; // À mettre dans .env.local
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +22,22 @@ export async function POST(request: Request) {
       [username, email, hashedPassword]
     );
 
-    return NextResponse.json({ message: "Utilisateur créé avec succès" }, { status: 201 });
+        // Vérifier si l'utilisateur existe
+    const [rows]: any = await db.query("SELECT * FROM Users WHERE email = ?", [email]);
+    const user = rows[0];
+
+    if (!user) {
+      return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
+    }
+
+  // Générer un JWT
+    const token = jwt.sign(
+      { id: user.id, username: user.username, email: user.email },
+      JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return NextResponse.json({ message: "Utilisateur créé avec succès", token  }, { status: 201 });
   } catch (error: any) {
     console.error(error);
 

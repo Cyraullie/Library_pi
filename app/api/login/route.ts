@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "secretdev"; // À mettre dans .env.local
+const JWT_SECRET = process.env.JWT_SECRET; // À mettre dans .env.local
 
 export async function POST(request: Request) {
   try {

@@ -45,7 +45,6 @@ export default function RegisterPage() {
       setError(data.message || "Erreur lors de l'inscription");
       return;
     }
-
     login(data.token)
     router.push("/me/books");
   };
