@@ -13,7 +13,7 @@ export default function Header() {
     logout();
     router.push("/");
   };
-
+//TODO faire en responsive bitch
   return (
     <header className="flex justify-between items-center p-4 bg-gray-900 text-white">
       <h1 className="text-xl font-bold">LibPi</h1>
