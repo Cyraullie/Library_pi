@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function AddBookPage() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     isbn: "",
     title: "",
@@ -16,11 +17,48 @@ export default function AddBookPage() {
     tome: "1",
     BookType_id: "1",
   });
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loadingLookup, setLoadingLookup] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // 🔎 Recherche ISBN
+  const lookupISBN = async () => {
+    if (!form.isbn) return;
+
+    setLoadingLookup(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/books/lookup/${form.isbn}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Livre non trouvé");
+        setLoadingLookup(false);
+        return;
+      }
+      console.log(data);
+      setForm((prev) => ({
+        ...prev,
+        title: data.title || prev.title,
+        author: data.author || prev.author,
+        image: data.image || prev.image,
+        publicationDate: data.publicationDate || prev.publicationDate,
+        editor: data.editor || prev.editor,
+        langage: data.language || prev.langage,
+      }));
+    } catch (err) {
+      setError("Erreur lors de la recherche ISBN");
+    }
+
+    setLoadingLookup(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,9 +98,6 @@ export default function AddBookPage() {
         tome: "1",
         BookType_id: "1",
       });
-
-      // Optionnel : rediriger vers le catalogue
-      // router.push("/books");
     } catch (err) {
       setError("Erreur réseau, réessayez.");
     }
@@ -72,22 +107,53 @@ export default function AddBookPage() {
     <main className="flex justify-center p-8">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-900 text-white p-8 rounded-xl w-full max-w-md flex flex-col gap-4"
+        className="bg-gray-900 text-white p-8 rounded-xl w-full max-w-md flex flex-col gap-4 shadow-xl"
       >
-        <h1 className="text-2xl font-bold text-center mb-4">Ajouter un livre</h1>
+        <h1 className="text-2xl font-bold text-center mb-2">
+          Ajouter un livre
+        </h1>
 
-        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-        {success && <p className="text-green-400 text-sm text-center">{success}</p>}
+        {error && (
+          <p className="text-red-400 text-sm text-center">{error}</p>
+        )}
+        {success && (
+          <p className="text-green-400 text-sm text-center">{success}</p>
+        )}
 
-        <input
-          type="text"
-          name="isbn"
-          placeholder="ISBN"
-          value={form.isbn}
-          onChange={handleChange}
-          required
-          className="p-2 rounded bg-gray-800"
-        />
+        {/* ISBN + Bouton recherche */}
+        <div className="flex gap-2">
+          <input
+            type="text"
+            name="isbn"
+            placeholder="ISBN"
+            value={form.isbn}
+            onChange={handleChange}
+            required
+            className="p-2 rounded bg-gray-800 flex-1"
+          />
+          <button
+            type="button"
+            onClick={lookupISBN}
+            className="bg-blue-600 px-3 rounded hover:bg-blue-700 transition"
+          >
+            {loadingLookup ? "..." : "🔎"}
+          </button>
+        </div>
+
+        {/* Preview image */}
+        {form.image && (
+          <div className="flex justify-center">
+            <img
+              src={form.image}
+              alt="Preview"
+              className="w-32 h-44 object-cover rounded shadow-md border border-gray-700"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          </div>
+        )}
+
         <input
           type="text"
           name="title"
@@ -97,6 +163,7 @@ export default function AddBookPage() {
           required
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="text"
           name="author"
@@ -106,6 +173,7 @@ export default function AddBookPage() {
           required
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="text"
           name="image"
@@ -114,14 +182,15 @@ export default function AddBookPage() {
           onChange={handleChange}
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="date"
           name="publicationDate"
-          placeholder="Date de publication"
           value={form.publicationDate}
           onChange={handleChange}
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="text"
           name="editor"
@@ -130,6 +199,7 @@ export default function AddBookPage() {
           onChange={handleChange}
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="text"
           name="langage"
@@ -138,15 +208,16 @@ export default function AddBookPage() {
           onChange={handleChange}
           className="p-2 rounded bg-gray-800"
         />
+
         <input
           type="number"
           name="tome"
-          placeholder="Tome"
           value={form.tome}
           onChange={handleChange}
           min={1}
           className="p-2 rounded bg-gray-800"
         />
+
         <select
           name="BookType_id"
           value={form.BookType_id}
@@ -160,7 +231,7 @@ export default function AddBookPage() {
 
         <button
           type="submit"
-          className="bg-green-600 p-2 rounded font-bold hover:bg-green-700 transition"
+          className="bg-green-600 p-2 rounded font-bold hover:bg-green-700 transition mt-2"
         >
           Ajouter le livre
         </button>
