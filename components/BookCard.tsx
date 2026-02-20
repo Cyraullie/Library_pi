@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface BookCardProps {
   id: number;
@@ -37,6 +38,7 @@ export default function BookCard({
   const [newRate, setNewRate] = useState(rate);
   const [newComment, setNewComment] = useState(comment);
   const [hovered, setHovered] = useState(false);
+  const router = useRouter();
 
   const token =
     typeof window !== "undefined"
@@ -106,6 +108,22 @@ export default function BookCard({
           className="absolute w-full h-full bg-gray-900 rounded-xl overflow-hidden"
           style={{ backfaceVisibility: "hidden" }}
         >
+          {!flipEnabled && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/books/${id}`);
+              }}
+              className="absolute top-2 right-2 z-20 
+                        bg-black/60 hover:bg-black/80 
+                        text-white text-xs font-bold 
+                        w-7 h-7 rounded-full 
+                        flex items-center justify-center 
+                        transition cursor-pointer"
+            >
+              ℹ
+            </button>
+          )}
           <img
             src={image}
             alt={title}

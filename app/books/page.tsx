@@ -34,7 +34,7 @@ export default function CataloguePage() {
       // 1️⃣ Catalogue
       const resBooks = await fetch("/api/books");
       const booksData = await resBooks.json();
-      console.log(booksData)
+      
       // 2️⃣ Bibliothèque utilisateur
       let myBooks: Book[] = [];
       if (token) {

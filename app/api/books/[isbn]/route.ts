@@ -39,3 +39,57 @@ export async function GET(
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+export async function PATCH(
+  req: Request,
+  context: { params: Promise<{ isbn: string }> }
+) {
+  const { isbn } = await context.params;
+  const bookId = Number(isbn);
+
+  if (isNaN(bookId)) {
+    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+  }
+
+  try {
+    const body = await req.json();
+
+    const {
+      title,
+      author,
+      image,
+      publicationDate,
+      editor,
+      langage,
+      tome,
+      serie,
+    } = body;
+
+  const formattedDate = body.publicationDate
+  ? new Date(body.publicationDate).toISOString().split("T")[0]
+  : null;
+
+    await db.query(
+      `UPDATE Books 
+       SET title = ?, author = ?, image = ?, publicationDate = ?, 
+           editor = ?, langage = ?, tome = ?, serie = ?
+       WHERE isbn = ?`,
+      [
+        title,
+        author,
+        image,
+        formattedDate,
+        editor,
+        langage,
+        tome,
+        serie,
+        bookId,
+      ]
+    );
+
+    return NextResponse.json({ message: "Livre modifié" });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
