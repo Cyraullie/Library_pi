@@ -178,17 +178,25 @@ export default function BookCard({
             </h3>
 
             {/* Statut */}
-            <div className="mb-3">
-              <label className="text-xs text-gray-400">Statut</label>
-              <select
-                value={newRead}
-                onChange={(e) => setNewRead(Number(e.target.value))}
-                onClick={(e) => e.stopPropagation()}
-                className="w-full mt-1 bg-gray-700 text-white rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                <option value={0}>À lire</option>
-                <option value={1}>Lu</option>
-              </select>
+            <div
+              className="mb-4 flex items-center justify-between bg-gray-700 px-4 py-3 rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="text-sm font-medium">
+                {newRead ? "Lu" : "À lire"}
+              </span>
+
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={newRead === 1}
+                  onChange={(e) => setNewRead(e.target.checked ? 1 : 0)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-500 rounded-full peer peer-checked:bg-green-500 transition relative">
+                  <div className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
+                </div>
+              </label>
             </div>
 
             {/* Note en étoiles */}
