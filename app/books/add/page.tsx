@@ -9,6 +9,7 @@ export default function AddBookPage() {
   const [form, setForm] = useState({
     isbn: "",
     title: "",
+    serie: "", // ✅ ajouté ici
     author: "",
     image: "",
     publicationDate: "",
@@ -53,6 +54,7 @@ export default function AddBookPage() {
         publicationDate: data.publicationDate || prev.publicationDate,
         editor: data.editor || prev.editor,
         langage: data.language || prev.langage,
+        serie: data.serie || prev.serie,
       }));
     } catch (err) {
       setError("Erreur lors de la recherche ISBN");
@@ -90,6 +92,7 @@ export default function AddBookPage() {
       setForm({
         isbn: "",
         title: "",
+        serie: "",
         author: "",
         image: "",
         publicationDate: "",
@@ -156,14 +159,21 @@ export default function AddBookPage() {
 
         <input
           type="text"
+          name="serie"
+          placeholder="Serie (Ex: Harry Potter)"
+          value={form.serie}
+          onChange={handleChange}
+          className="p-2 rounded bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          type="text"
           name="title"
-          placeholder="Titre"
+          placeholder="Titre (Ex: La coupe de feu)"
           value={form.title}
           onChange={handleChange}
           required
           className="p-2 rounded bg-gray-800"
         />
-
         <input
           type="text"
           name="author"

@@ -7,6 +7,7 @@ interface Book {
   id: number;
   isbn: string;
   title: string;
+  serie: string;
   author: string;
   image: string;
   publicationDate: string;
@@ -33,7 +34,7 @@ export default function CataloguePage() {
       // 1️⃣ Catalogue
       const resBooks = await fetch("/api/books");
       const booksData = await resBooks.json();
-
+      console.log(booksData)
       // 2️⃣ Bibliothèque utilisateur
       let myBooks: Book[] = [];
       if (token) {
@@ -117,6 +118,7 @@ export default function CataloguePage() {
             key={book.id}
             id={book.id}
             title={book.title}
+            serie={book.serie}
             author={book.author}
             image={book.image}
             tome={book.tome}

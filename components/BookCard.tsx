@@ -5,6 +5,7 @@ import { useState } from "react";
 interface BookCardProps {
   id: number;
   title: string;
+  serie?: string;
   author: string;
   image: string;
   tome?: number;
@@ -20,6 +21,7 @@ interface BookCardProps {
 export default function BookCard({
   id,
   title,
+  serie,
   author,
   image,
   tome,
@@ -153,7 +155,7 @@ export default function BookCard({
               </p>
             )}
           <div className="absolute bottom-0 w-full bg-black/70 p-3">
-            <h2 className="font-bold text-sm">{title}</h2>
+            <h2 className="font-bold text-sm">{serie} {title}</h2>
             <p className="text-xs text-gray-300">{author}</p>
             {tome && <p className="text-xs">Tome {tome}</p>}
 

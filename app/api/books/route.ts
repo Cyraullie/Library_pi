@@ -11,6 +11,7 @@ export async function GET() {
         Books.id,
         Books.isbn,
         Books.title,
+        Books.serie,
         Books.author,
         Books.image,
         Books.publicationDate,
@@ -37,6 +38,7 @@ export async function POST(request: Request) {
     const {
       isbn,
       title,
+      serie,
       author,
       image,
       publicationDate,
@@ -58,11 +60,12 @@ export async function POST(request: Request) {
 
     const [result]: any = await db.query(
       `INSERT INTO Books 
-      (isbn, title, author, image, publicationDate, editor, langage, tome, BookType_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (isbn, title, serie, author, image, publicationDate, editor, langage, tome, BookType_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         isbn,
         title,
+        serie,
         author,
         image || "",
         publicationDate || null,
