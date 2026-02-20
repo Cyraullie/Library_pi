@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import ReportIssueButton from "@/components/ReportIssueButton";
 
 export default function Header() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function Header() {
       <h1 className="text-xl font-bold">LibPi</h1>
 
       <nav className="flex gap-6 items-center">
+        <ReportIssueButton />
         <Link href="/">Accueil</Link>
         <Link href="/books">Catalogue</Link>
         <Link href="/me/books">Ma bibliothèque</Link>
