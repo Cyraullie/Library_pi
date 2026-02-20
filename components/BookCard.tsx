@@ -125,6 +125,7 @@ export default function BookCard({
                 onClick={(e) => {
                   e.stopPropagation(); // empêche le click de remonter
                   if (!isAdded && onAdd) onAdd();
+                  if (isAdded) deleteBook(id);
                 }}
                 className="w-full h-full flex items-center justify-center"
               >
