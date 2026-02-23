@@ -18,6 +18,7 @@ export async function GET(req: Request) {
       SELECT 
         Books.id,
         Books.title,
+        Books.serie,
         Books.author,
         Books.image,
         Books.tome,

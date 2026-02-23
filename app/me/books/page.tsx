@@ -99,6 +99,7 @@ export default function MyBooksPage() {
             key={book.id}
             id={book.id}
             title={book.title}
+            serie={book.serie}
             author={book.author}
             image={book.image}
             tome={book.tome}
