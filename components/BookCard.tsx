@@ -174,7 +174,7 @@ export default function BookCard({
               </p>
             )}
           <div className="absolute bottom-0 w-full bg-black/70 p-3">
-            <h2 className="font-bold text-sm">{serie}<br/>{title}</h2>
+            <h2 className="font-bold text-sm">{serie}{serie? <br/> : ""}{title}</h2>
             <p className="text-xs text-gray-300">{author}</p>
             {tome && <p className="text-xs">Tome {tome}</p>}
 
@@ -212,9 +212,12 @@ export default function BookCard({
                   onChange={(e) => setNewRead(e.target.checked ? 1 : 0)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-500 rounded-full peer peer-checked:bg-green-500 transition relative">
-                  <div className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
-                </div>
+
+                {/* Track */}
+                <div className="w-11 h-6 bg-gray-500 rounded-full peer-checked:bg-green-500 transition-colors duration-300"></div>
+
+                {/* Circle */}
+                <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5"></div>
               </label>
             </div>
 
