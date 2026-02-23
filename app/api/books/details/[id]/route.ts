@@ -36,7 +36,7 @@ export async function GET(
       `SELECT u.username, uhb.comment, uhb.rate
        FROM Users_has_Books uhb
        JOIN Users u ON u.id = uhb.Users_id
-       WHERE uhb.Books_id = ? AND uhb.comment IS NOT NULL`,
+       WHERE uhb.Books_id = ? AND uhb.read = 1 AND uhb.comment != ""`,
       [bookId]
     );
 

@@ -174,7 +174,7 @@ export default function BookCard({
               </p>
             )}
           <div className="absolute bottom-0 w-full bg-black/70 p-3">
-            <h2 className="font-bold text-sm">{serie} {title}</h2>
+            <h2 className="font-bold text-sm">{serie}<br/>{title}</h2>
             <p className="text-xs text-gray-300">{author}</p>
             {tome && <p className="text-xs">Tome {tome}</p>}
 

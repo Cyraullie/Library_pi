@@ -62,7 +62,9 @@ export default function CataloguePage() {
   // Filtrage
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
-      book.title.toLowerCase().includes(search.toLowerCase()) ||
+      book.serie?.toLowerCase().includes(search.toLowerCase()) ||
+      book.editor?.toLowerCase().includes(search.toLowerCase()) ||
+      book.title?.toLowerCase().includes(search.toLowerCase()) ||
       book.author.toLowerCase().includes(search.toLowerCase());
     const matchesType = filterType === "all" || book.bookType === filterType;
 
@@ -82,6 +84,18 @@ export default function CataloguePage() {
       });
 
       const data = await res.json();
+    setAddedBooks((prev) => [...prev, bookId]);
+  };
+
+    const deleteToLibrary = async (bookId: number) => {
+      if (!token) return alert("Vous devez être connecté");
+
+      await fetch(`/api/me/books/${bookId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     setAddedBooks((prev) => [...prev, bookId]);
   };
 
