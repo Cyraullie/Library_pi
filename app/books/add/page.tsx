@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function AddBookPage() {
   const router = useRouter();
+  const [add, setAdd] = useState(false);
 
   const [form, setForm] = useState({
     isbn: "",
@@ -23,6 +24,10 @@ export default function AddBookPage() {
   const [success, setSuccess] = useState("");
   const [loadingLookup, setLoadingLookup] = useState(false);
 
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -45,7 +50,6 @@ export default function AddBookPage() {
         setLoadingLookup(false);
         return;
       }
-      console.log(data);
       setForm((prev) => ({
         ...prev,
         title: data.title || prev.title,
@@ -64,20 +68,23 @@ export default function AddBookPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    if (!token) return alert("Vous devez être connecté");
     e.preventDefault();
     setError("");
     setSuccess("");
-
     try {
       const res = await fetch("/api/books", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+          
         },
         body: JSON.stringify({
           ...form,
           tome: parseInt(form.tome),
           BookType_id: parseInt(form.BookType_id),
+          Add: add,
         }),
       });
 
@@ -238,6 +245,26 @@ export default function AddBookPage() {
           <option value="2">Manga</option>
           <option value="3">BD</option>
         </select>
+
+        <div
+          className="mb-4 flex items-center justify-between bg-gray-700 px-4 py-3 rounded-lg"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span className="text-sm font-medium">
+            Ajouter à ma bibliothèque
+          </span>
+
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              onChange={(e) => setAdd(e.target.checked ? true : false)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-500 rounded-full peer peer-checked:bg-green-500 transition relative">
+              <div className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-5"></div>
+            </div>
+          </label>
+        </div>
 
         <button
           type="submit"

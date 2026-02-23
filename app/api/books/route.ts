@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 // -----------------------------------
 // GET → liste tous les livres
@@ -45,7 +46,8 @@ export async function POST(request: Request) {
       editor,
       langage,
       tome,
-      BookType_id
+      BookType_id,
+      Add
     } = await request.json();
 
     if (!isbn || !title || !author || !BookType_id) {
@@ -75,7 +77,35 @@ export async function POST(request: Request) {
         BookType_id
       ]
     );
+//TODO get id to insert for the user if he want
+//TODO mettre un chcekbox pour s'il veut l'ajouter directe dans sont inventaire ?
 
+    if (Add)
+    {
+      const auth = request.headers.get("authorization");
+      
+          if (!auth) {
+            return Response.json({ message: "Not authorized" }, { status: 401 });
+          }
+      
+          const token = auth.split(" ")[1];
+          const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
+          const userId = decoded.id; // ou decoded.userId selon ton token
+
+          const [rows]: any = await db.query(`
+            SELECT id
+            FROM Books
+            ORDER BY id DESC
+            LIMIT 1;
+          `);
+
+          // Ajoute le livre
+          await db.query(
+            `INSERT INTO Users_has_Books (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
+            VALUES (?, ?, NOW(), 0, 0, NULL)`,
+            [userId, rows[0].id,]
+          );
+    }
     return NextResponse.json({ message: "Livre ajouté", id: result.insertId });
   } catch (error) {
     console.error(error);
