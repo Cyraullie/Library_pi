@@ -125,7 +125,7 @@ export default function BookCard({
             </button>
           )}
           <img
-            src={image}
+            src={image? image: "https://laz-img-sg.alicdn.com/p/3fe9c8a1dbfb5b3910e306183ec5d669.jpg"}
             alt={title}
             className="w-full h-full object-cover"
           />

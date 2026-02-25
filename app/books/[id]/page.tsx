@@ -22,7 +22,6 @@ export default function BookDetailPage() {
     fetch(`/api/books/details/${id}`)
       .then((res) => res.json())
       .then((data) => {
-		console.log(data)
         setBook(data.book);
         setEditForm(data.book); // important pour l’édition
         setComments(data.comments);
@@ -53,7 +52,7 @@ export default function BookDetailPage() {
     <main className="p-8 max-w-5xl mx-auto text-white">
       <div className="flex gap-8">
         <img
-          src={book.image}
+          src={book.image ? book.image : "https://laz-img-sg.alicdn.com/p/3fe9c8a1dbfb5b3910e306183ec5d669.jpg"}
           alt={book.title}
           className="w-64 rounded-xl shadow-lg"
         />
