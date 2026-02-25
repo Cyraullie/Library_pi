@@ -25,7 +25,9 @@ export default function ReportIssueButton() {
       setSuccess("Issue créée !");
       setTitle("");
       setMessage("");
+      setTimeout(() => setSuccess(""), 1500);
       setTimeout(() => setOpen(false), 1500);
+      
     } else {
       alert(data.error || "Erreur");
     }
