@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import NotificationBanner from "@/components/NotificationBanner";
 
 interface Comment {
   username: string;
@@ -14,6 +15,11 @@ export default function BookDetailPage() {
   const [book, setBook] = useState<any>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [avgRate, setAvgRate] = useState<number>(0);
+
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState<any>(null);
@@ -44,12 +50,22 @@ export default function BookDetailPage() {
       setBook(editForm);
       setEditMode(false);
     } else {
-      alert("Erreur lors de la modification");
+      setNotification({
+        message: "Erreur lors de la modification",
+        type: "error",
+      });
     }
   };
 
   return (
     <main className="p-8 max-w-5xl mx-auto text-white">
+      {notification && (
+        <NotificationBanner
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <div className="flex gap-8">
         <img
           src={book.image ? book.image : "https://laz-img-sg.alicdn.com/p/3fe9c8a1dbfb5b3910e306183ec5d669.jpg"}

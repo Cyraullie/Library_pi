@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NotificationBanner from "@/components/NotificationBanner";
 
 interface BookCardProps {
   id: number;
@@ -39,6 +40,10 @@ export default function BookCard({
   const [newComment, setNewComment] = useState(comment);
   const [hovered, setHovered] = useState(false);
   const router = useRouter();
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const token =
     typeof window !== "undefined"
@@ -67,11 +72,18 @@ export default function BookCard({
       // tu peux éventuellement afficher un petit toast ici
     } else {
       const data = await res.json();
-      alert(data.error || "Erreur lors de la mise à jour");
+      
+      setNotification({
+        message: data.error || "Erreur lors de la mise à jour",
+        type: "error",
+      });
     }
   } catch (err) {
     console.error(err);
-    alert("Erreur serveur");
+    setNotification({
+      message: "Erreur serveur",
+      type: "error",
+    });
   }
 };
 

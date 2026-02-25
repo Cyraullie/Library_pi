@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NotificationBanner from "@/components/NotificationBanner";
 
 export default function AddBookPage() {
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
   const router = useRouter();
   const [add, setAdd] = useState(false);
 
@@ -68,8 +74,13 @@ export default function AddBookPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    if (!token) return alert("Vous devez être connecté");
+    
+      
     e.preventDefault();
+    if (!token) return setNotification({
+      message: "Erreur lors de la modification",
+      type: "error",
+    });
     setError("");
     setSuccess("");
     try {
@@ -115,6 +126,13 @@ export default function AddBookPage() {
 
   return (
     <main className="flex justify-center p-8">
+      {notification && (
+        <NotificationBanner
+          message={notification.message}
+          type={notification.type}
+          onClose={() => setNotification(null)}
+        />
+      )}
       <form
         onSubmit={handleSubmit}
         className="bg-gray-900 text-white p-8 rounded-xl w-full max-w-md flex flex-col gap-4 shadow-xl"

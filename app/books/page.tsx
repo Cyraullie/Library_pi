@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import BookCard from "@/components/BookCard";
+import NotificationBanner from "@/components/NotificationBanner";
 
 interface Book {
   id: number;
@@ -23,6 +24,10 @@ export default function CataloguePage() {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [addedBooks, setAddedBooks] = useState<number[]>([]);
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   
   const token =
     typeof window !== "undefined"
@@ -72,7 +77,10 @@ export default function CataloguePage() {
   });
 
   const addToLibrary = async (bookId: number, isbn: string) => {
-      if (!token) return alert("Vous devez être connecté");
+    if (!token) return setNotification({
+      message: "Erreur lors de la modification",
+      type: "error",
+    });
 
       const res = await fetch("/api/me/books", {
       method: "POST",
@@ -84,18 +92,6 @@ export default function CataloguePage() {
       });
 
       const data = await res.json();
-    setAddedBooks((prev) => [...prev, bookId]);
-  };
-
-    const deleteToLibrary = async (bookId: number) => {
-      if (!token) return alert("Vous devez être connecté");
-
-      await fetch(`/api/me/books/${bookId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
     setAddedBooks((prev) => [...prev, bookId]);
   };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import NotificationBanner from "@/components/NotificationBanner";
 
 export default function ReportIssueButton() {
   const [open, setOpen] = useState(false);
@@ -8,6 +9,10 @@ export default function ReportIssueButton() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const submitIssue = async () => {
     setLoading(true);
@@ -28,8 +33,11 @@ export default function ReportIssueButton() {
       setTimeout(() => setSuccess(""), 1500);
       setTimeout(() => setOpen(false), 1500);
       
-    } else {
-      alert(data.error || "Erreur");
+    } else { 
+      setNotification({
+        message: data.error || "Erreur",
+        type: "error",
+      });
     }
 
     setLoading(false);
