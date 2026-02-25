@@ -42,13 +42,12 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  context: { params: Promise<{ isbn: string }> }
+  context: { params: { isbn: string } }
 ) {
-  const { isbn } = await context.params;
-  const bookId = Number(isbn);
+  const isbn = context.params.isbn; // ← direct string
 
-  if (isNaN(bookId)) {
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+  if (!isbn || typeof isbn !== "string") {
+    return NextResponse.json({ error: "Invalid ISBN" }, { status: 400 });
   }
 
   try {
@@ -65,9 +64,9 @@ export async function PATCH(
       serie,
     } = body;
 
-  const formattedDate = body.publicationDate
-  ? new Date(body.publicationDate).toISOString().split("T")[0]
-  : null;
+    const formattedDate = publicationDate
+      ? new Date(publicationDate).toISOString().split("T")[0]
+      : null;
 
     await db.query(
       `UPDATE Books 
@@ -83,7 +82,7 @@ export async function PATCH(
         langage,
         tome,
         serie,
-        bookId,
+        isbn, // ← string direct
       ]
     );
 

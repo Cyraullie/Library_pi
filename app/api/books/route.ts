@@ -77,8 +77,6 @@ export async function POST(request: Request) {
         BookType_id
       ]
     );
-//TODO get id to insert for the user if he want
-//TODO mettre un chcekbox pour s'il veut l'ajouter directe dans sont inventaire ?
 
     if (Add)
     {
