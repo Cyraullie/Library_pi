@@ -9,17 +9,29 @@ permissions:
 
 jobs:
   assign:
-    runs-on: ubuntu-latest
     if: contains(github.event.issue.body, '[created-by-my-app]')
+    runs-on: ubuntu-latest
     steps:
-      - name: Assign issue
-        uses: pozil/auto-assign-issue@v1
+      - uses: actions/github-script@v7
         with:
-          assignees: Cyraullie
+          script: |
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: ["Cyraullie"]
+            });
 
-      - name: Add label
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          labels: |
-            bug
-            from-app
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ["from-app"]
+            });
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ["bug"]
+            });
