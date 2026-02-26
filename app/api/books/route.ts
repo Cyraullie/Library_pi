@@ -54,6 +54,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
     }
 
+    if (tome < 1)
+    {
+      return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
+    }
+    
     const [existing]: any = await db.query("SELECT id FROM Books WHERE isbn = ?", [isbn]);
 
     if (existing.length > 0) {
