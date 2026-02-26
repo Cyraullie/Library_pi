@@ -31,3 +31,12 @@ jobs:
                 labels: ["from-app", "bug"]
               });
             }
+
+            if (!context.payload.issue.body?.includes("[created-by-LibPi]")) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: ["future feature"]
+              });
+            }
