@@ -12,14 +12,14 @@ export default function AddBookPage() {
 
   const router = useRouter();
   const [add, setAdd] = useState(false);
-
+  const today = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
     isbn: "",
     title: "",
     serie: "", // ✅ ajouté ici
     author: "",
     image: "",
-    publicationDate: "",
+    publicationDate: today,
     editor: "",
     langage: "fr",
     tome: "1",
