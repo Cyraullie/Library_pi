@@ -12,20 +12,20 @@ export async function POST(req: Request) {
     }
 // TODO mettre un username pour savoir qui a fait l'issue ?
     const newBody = `
-      ## 🚨 Bug Report (Auto)
+## 🚨 Bug Report (Auto)
 
-      **Date:** ${new Date().toISOString()}
-      **User ID:**
-      **Page:** 
+**Date:** ${new Date().toISOString().split("T")[0]} ${new Date().toISOString().split("T")[1].split(":")[0]}h${new Date().toISOString().split("T")[1].split(":")[1]}
+**User ID:**
+**Page:** 
 
-      ### Error
-      \`\`\`
-      ${body}
-      \`\`\`
+### Error
+\`\`\`
+${body}
+\`\`\`
 
-      ---
-      [created-by-my-app]
-      `
+---
+[created-by-LibPi]
+`
 
     const response = await fetch(
       "https://api.github.com/repos/" + process.env.GITHUB_REPO + "/issues", // ⚠️ adapte si besoin
