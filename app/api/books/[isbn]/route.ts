@@ -42,15 +42,16 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  context: { params: { isbn: string } }
+  { params }: { params: Promise<{ isbn: string }> }
 ) {
-  const isbn = context.params.isbn; // ← direct string
 
-  if (!isbn || typeof isbn !== "string") {
-    return NextResponse.json({ error: "Invalid ISBN" }, { status: 400 });
-  }
 
   try {
+    const { isbn } = await params;
+
+    if (!isbn) {
+      return NextResponse.json({ error: "Invalid ISBN" }, { status: 400 });
+    }
     const body = await req.json();
 
     const {
@@ -82,7 +83,7 @@ export async function PATCH(
         langage,
         tome,
         serie,
-        isbn, // ← string direct
+        isbn,
       ]
     );
 
