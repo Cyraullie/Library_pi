@@ -10,6 +10,22 @@ export async function POST(req: Request) {
         { status: 500 }
       );
     }
+// TODO mettre un username pour savoir qui a fait l'issue ?
+    const newBody = `
+      ## 🚨 Bug Report (Auto)
+
+      **Date:** ${new Date().toISOString()}
+      **User ID:**
+      **Page:** 
+
+      ### Error
+      \`\`\`
+      ${body}
+      \`\`\`
+
+      ---
+      [created-by-my-app]
+      `
 
     const response = await fetch(
       "https://api.github.com/repos/" + process.env.GITHUB_REPO + "/issues", // ⚠️ adapte si besoin
@@ -22,7 +38,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           title,
-          body,
+          body: newBody,
         }),
       }
     );
