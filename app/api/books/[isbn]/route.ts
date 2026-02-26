@@ -65,6 +65,11 @@ export async function PATCH(
       serie,
     } = body;
 
+    if (tome < 1)
+    {
+      return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
+    }
+
     const formattedDate = publicationDate
       ? new Date(publicationDate).toISOString().split("T")[0]
       : null;
