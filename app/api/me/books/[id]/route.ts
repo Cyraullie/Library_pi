@@ -51,6 +51,15 @@ export async function PATCH(
 
     const { read, rate, comment } = await request.json();
 
+    if (read < 0 || read > 1) 
+    {
+      return Response.json({ error: "status inconnu" }, { status: 400 });
+    }
+    if (rate < 0 || rate > 5)
+    {
+      return Response.json({ error: "note indisponible" }, { status: 400 });
+    }
+
     await db.query(
       `UPDATE Users_has_Books
        SET \`read\` = ?, rate = ?, \`comment\` = ?
