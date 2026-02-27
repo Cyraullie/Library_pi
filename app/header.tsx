@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import ReportIssueButton from "@/components/ReportIssueButton";
+import logo from "@/assets/logo.png"
+import Image from "next/image";
 
 export default function Header() {
   const router = useRouter();
@@ -23,8 +25,8 @@ export default function Header() {
     <header className="bg-gray-900 text-white shadow-md">
       <div className="flex justify-between items-center p-4 max-w-10xl">
         <Link href="/" style={{display: "flex" }}>
-          <img src="./favicon.ico" style={{ height: 25, marginRight: 10 }}/>
-          <h1 className="text-xl font-bold">LibPi</h1>
+          <Image src={logo} alt="Logo" style={{ height: 21*1.5, width: 23.8*1.5, marginRight: 20 }}/>
+          <h1 className="text-xl font-bold" style={{textAlign: "center"}}>LibPi</h1>
         </Link>
 
         {/* Burger button (mobile only) */}
