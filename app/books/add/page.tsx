@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { useRouter } from "next/navigation";
 import NotificationBanner from "@/components/NotificationBanner";
+import { useIsMobileDevice } from "@/components/useIsMobileDevice";
 
 export default function AddBookPage() {
+  const scannerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobileDevice();
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -124,6 +128,46 @@ export default function AddBookPage() {
     }
   };
 
+  const scan = () =>
+  {
+    if (!scannerRef.current) return;
+
+    const scanner = new Html5QrcodeScanner(
+      "scanner",
+      {
+        fps: 10,
+        qrbox: 150
+      },
+      false
+    );
+
+    scanner.render(
+      async (decodedText) => {
+        console.log("Code scanné :", decodedText);
+        
+
+        setForm((prev) => ({
+        ...prev,
+        isbn: decodedText,
+        title: prev.title,
+        author: prev.author,
+        image: prev.image,
+        publicationDate: prev.publicationDate,
+        editor: prev.editor,
+        langage: prev.langage,
+        serie:  prev.serie,
+      }));
+        // On suppose que c’est un ISBN
+        
+
+        scanner.clear();
+      },
+      (error) => {
+        // erreurs de scan ignorées
+      }
+    );
+  }
+
   return (
     <main className="flex justify-center p-8">
       {notification && (
@@ -149,6 +193,22 @@ export default function AddBookPage() {
         )}
 
         {/* ISBN + Bouton recherche */}
+        
+      <div id="scanner" ref={scannerRef}
+        className="w-full max-w-sm" />
+      <button
+      //TODO redisable button when finish
+        //disabled={!isMobile}
+        type="button"
+        onClick={scan}
+        className={`px-4 py-2 rounded ${
+          isMobile
+            ? "bg-blue-600 hover:bg-blue-700"
+            : "bg-gray-400 cursor-not-allowed"
+        }`}
+      >
+        Scanner un code-barres
+      </button>
         <div className="flex gap-2">
           <input
             type="text"
