@@ -143,8 +143,6 @@ export default function AddBookPage() {
 
     scanner.render(
       async (decodedText) => {
-        console.log("Code scanné :", decodedText);
-        
 
         setForm((prev) => ({
         ...prev,
@@ -159,7 +157,6 @@ export default function AddBookPage() {
       }));
         // On suppose que c’est un ISBN
         
-
         scanner.clear();
       },
       (error) => {
