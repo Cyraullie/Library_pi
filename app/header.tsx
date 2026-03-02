@@ -22,7 +22,7 @@ export default function Header() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="bg-gray-900 text-white shadow-md">
+    <header className="bg-gray-900 text-white shadow-md fixed z-50" style={{ width: "100%", height: 74 }}>
       <div className="flex justify-between items-center p-4 max-w-10xl">
         <Link href="/" style={{display: "flex" }}>
           <Image src={logo} alt="Logo" style={{ height: 21*1.5, width: 23.8*1.5, marginRight: 20 }}/>
