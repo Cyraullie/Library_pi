@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import { Html5QrcodeScanner, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { useRouter } from "next/navigation";
 import NotificationBanner from "@/components/NotificationBanner";
 import { useIsMobileDevice } from "@/components/useIsMobileDevice";
@@ -135,7 +135,8 @@ export default function AddBookPage() {
     const scanner = new Html5QrcodeScanner(
       "scanner",
       {
-        fps: 10,
+        fps: 15,
+        formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
         qrbox: 150
       },
       false
