@@ -12,6 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Debug secrets
+        run: |
+          echo "USER: ${{ secrets.SSH_USER }}"
+          echo "HOST: ${{ secrets.SSH_HOST }}"
       - name: Setup SSH
         shell: bash
         run: |
