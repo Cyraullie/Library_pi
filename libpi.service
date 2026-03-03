@@ -1,0 +1,15 @@
+[Unit]
+Description=LibPi Next.js app
+After=network.target
+
+[Service]
+Type=simple
+User=cgoldens
+WorkingDirectory=/home/cgoldens/Library_pi
+ExecStart=/home/cgoldens/.nvm/versions/node/v20.20.0/bin/npm run prod
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
