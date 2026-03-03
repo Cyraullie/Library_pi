@@ -1,36 +1,30 @@
-name: Deploy to Raspberry Pi
+name: Deploy on Release
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug secrets
-        run: |
-          echo "USER: ${{ secrets.SSH_USER }}"
-          echo "HOST: ${{ secrets.SSH_HOST }}"
       - name: Setup SSH
-        shell: bash
         run: |
-          mkdir -p /home/runner/.ssh
-          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_ed25519
-          chmod 600 /home/runner/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> /home/runner/.ssh/known_hosts
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy
-        shell: bash
+      - name: Deploy to Raspberry Pi
         run: |
-          ssh -i /home/runner/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
-            cd ~/Library_pi &&
-            git pull &&
-            npm install &&
-            npm run prod
-          "
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /home/pi/mon-projet
+            git pull origin main
+            npm install
+            # Crée une session tmux nommée "app" et lance npm run prod
+            tmux new-session -d -s app 'npm run prod'
+          EOF
