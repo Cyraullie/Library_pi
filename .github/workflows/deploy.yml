@@ -22,7 +22,7 @@ jobs:
       - name: Deploy to Raspberry Pi
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /home/pi/mon-projet
+            cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
             npm install
             # Crée une session tmux nommée "app" et lance npm run prod
