@@ -28,10 +28,8 @@ jobs:
             npm run build
 
             # Lancer ou redémarrer l'app avec PM2
-            pm2 start npm --name "LibPi" -- run prod --interpreter bash || pm2 restart LibPi
+            pm2 start npm --name "LibPi" -- run prod || pm2 restart LibPi
             # Sauvegarder la configuration PM2 pour redémarrage automatique au boot
-
-            # Lancer ngrok
-            pm2 start ./start-ngrok.sh --name "ngrok-tunnel" || pm2 restart ngrok-tunnel
+            
             pm2 save
           EOF
