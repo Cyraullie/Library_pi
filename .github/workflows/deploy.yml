@@ -15,15 +15,16 @@ jobs:
       - name: Setup SSH
         shell: bash
         run: |
-          mkdir -p $HOME/.ssh
-          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_ed25519
-          chmod 600 $HOME/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> $HOME/.ssh/known_hosts
+          mkdir -p /home/runner/.ssh
+          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > /home/runner/.ssh/id_ed25519
+          chmod 600 /home/runner/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> /home/runner/.ssh/known_hosts
 
       - name: Deploy
         shell: bash
         run: |
-          ssh -i $HOME/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+          ssh -i /home/runner/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
             cd ~/Library_pi &&
             git pull &&
             npm install &&
