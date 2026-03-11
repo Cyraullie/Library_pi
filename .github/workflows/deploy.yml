@@ -1,4 +1,4 @@
-name: Deploy on Release
+name: Deploy to Vercel
 
 on:
   release:
@@ -9,27 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Install Vercel CLI
+        run: npm install -g vercel
 
-      - name: Deploy to Raspberry Pi
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd ${{ secrets.PROJECT_PATH }}
-            git pull origin main
-            npm install
-            # Redémarre le service systemd pour appliquer la nouvelle version
-            sudo systemctl restart libpi
-          EOF
-        env:
-          PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Deploy
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
