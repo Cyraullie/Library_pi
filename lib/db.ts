@@ -5,5 +5,4 @@ export const db = new Pool({
   ssl: {
     rejectUnauthorized: false
   },
-  options: "-c search_path=library_pi"
 });
