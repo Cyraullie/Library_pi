@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 // GET → liste tous les livres
 // -----------------------------------
 export async function GET() {
+  return NextResponse.json(Object.keys(process.env));
   console.log(Object.keys(process.env));
   console.log("test")
   try {
