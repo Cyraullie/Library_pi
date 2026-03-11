@@ -18,12 +18,12 @@ export async function POST(request: Request) {
 
     // Insérer dans la DB
     await db.query(
-      "INSERT INTO Users (username, email, password) VALUES (?, ?, ?)",
+      "INSERT INTO "Users" (username, email, password) VALUES (?, ?, ?)",
       [username, email, hashedPassword]
     );
 
         // Vérifier si l'utilisateur existe
-    const [rows]: any = await db.query("SELECT * FROM library_pi.Users WHERE email = ?", [email]);
+    const [rows]: any = await db.query("SELECT * FROM library_pi."Users" WHERE email = ?", [email]);
     const user = rows[0];
 
     if (!user) {

@@ -11,7 +11,7 @@ export async function GET(
   }
 
   try {
-    // Google Books API
+    // Google "Books" API
     const googleRes = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`
     );

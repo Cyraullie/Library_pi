@@ -14,19 +14,19 @@ export async function GET(
 
     const [rows]: any = await db.query(`
       SELECT 
-        Books.id,
-        Books.isbn,
-        Books.title,
-        Books.author,
-        Books.image,
-        Books.publicationDate,
-        Books.editor,
-        Books.langage,
-        Books.tome,
-        BookType.type AS bookType
-      FROM library_pi.Books
-      JOIN BookType ON Books.BookType_id = BookType.id
-      WHERE Books.isbn = ?
+        "Books".id,
+        "Books".isbn,
+        "Books".title,
+        "Books".author,
+        "Books".image,
+        "Books".publicationDate,
+        "Books".editor,
+        "Books".langage,
+        "Books".tome,
+        "BookType".type AS bookType
+      FROM library_pi."Books"
+      JOIN "BookType" ON "Books".BookType_id = "BookType".id
+      WHERE "Books".isbn = ?
     `, [isbn]);
 
     if (rows.length === 0) {
@@ -75,7 +75,7 @@ export async function PATCH(
       : null;
 
     await db.query(
-      `UPDATE Books 
+      `UPDATE "Books" 
        SET title = ?, author = ?, image = ?, publicationDate = ?, 
            editor = ?, langage = ?, tome = ?, serie = ?
        WHERE isbn = ?`,

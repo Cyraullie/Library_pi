@@ -9,19 +9,20 @@ export async function GET() {
   try {
     const result = await db.query(`
       SELECT 
-        Books.id,
-        Books.isbn,
-        Books.title,
-        Books.serie,
-        Books.author,
-        Books.image,
-        Books.publicationDate,
-        Books.editor,
-        Books.langage,
-        Books.tome,
-        BookType.type as bookType
-      FROM library_pi.Books
-      JOIN BookType ON Books.BookType_id = BookType.id
+        "Books".id,
+        "Books".isbn,
+        "Books".title,
+        "Books".serie,
+        "Books".author,
+        "Books".image,
+        "Books".publicationDate,
+        "Books".editor,
+        "Books".langage,
+        "Books".tome,
+        "BookType".type as bookType
+      FROM library_pi."Books"
+      JOIN library_pi."BookType"
+      ON "Books".BookType_id = "BookType".id
     `);
     const rows = result.rows;
     return NextResponse.json(rows);
@@ -59,14 +60,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
     }
     
-    const [existing]: any = await db.query("SELECT id FROM library_pi.Books WHERE isbn = ?", [isbn]);
+    const [existing]: any = await db.query("SELECT id FROM library_pi."Books" WHERE isbn = ?", [isbn]);
 
     if (existing.length > 0) {
       return NextResponse.json({ message: "Livre déjà présent", id: existing[0].id });
     }
 
     const [result]: any = await db.query(
-      `INSERT INTO Books 
+      `INSERT INTO "Books" 
       (isbn, title, serie, author, image, publicationDate, editor, langage, tome, BookType_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -97,14 +98,14 @@ export async function POST(request: Request) {
 
           const [rows]: any = await db.query(`
             SELECT id
-            FROM library_pi.Books
+            FROM library_pi."Books"
             ORDER BY id DESC
             LIMIT 1;
           `);
 
           // Ajoute le livre
           await db.query(
-            `INSERT INTO Users_has_Books (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
+            `INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
             VALUES (?, ?, NOW(), 0, 0, NULL)`,
             [userId, rows[0].id,]
           );

@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Vérifier si l'utilisateur existe
-    const [rows]: any = await db.query("SELECT * FROM library_pi.Users WHERE email = ?", [email]);
+    const [rows]: any = await db.query("SELECT * FROM library_pi."Users" WHERE email = ?", [email]);
     const user = rows[0];
 
     if (!user) {

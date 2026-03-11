@@ -16,17 +16,17 @@ export async function GET(req: Request) {
 
     const [rows]: any = await db.query(`
       SELECT 
-        Books.id,
-        Books.title,
-        Books.serie,
-        Books.author,
-        Books.image,
-        Books.tome,
-        Users_has_Books.read,
-        Users_has_Books.rate
-      FROM library_pi.Users_has_Books
-      JOIN Books ON Users_has_Books.Books_id = Books.id
-      WHERE Users_has_Books.Users_id = ?
+        "Books".id,
+        "Books".title,
+        "Books".serie,
+        "Books".author,
+        "Books".image,
+        "Books".tome,
+        "Users_has_Books".read,
+        "Users_has_Books".rate
+      FROM library_pi."Users_has_Books"
+      JOIN "Books" ON "Users_has_Books".Books_id = "Books".id
+      WHERE "Users_has_Books".Users_id = ?
     `, [userId]);
 
     return Response.json(rows);
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     // Récupère le livre par ISBN
-    const [books]: any = await db.query("SELECT id FROM library_pi.Books WHERE isbn = ?", [isbn]);
+    const [books]: any = await db.query("SELECT id FROM library_pi."Books" WHERE isbn = ?", [isbn]);
 
     if (books.length === 0) {
       return Response.json({ message: "Livre non trouvé" }, { status: 404 });
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
     // Vérifie si le livre existe déjà pour l'utilisateur
     const [existing]: any = await db.query(
-      "SELECT * FROM library_pi.Users_has_Books WHERE Users_id = ? AND Books_id = ?",
+      "SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = ? AND Books_id = ?",
       [userId, bookId]
     );
 
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
 
     // Ajoute le livre
     await db.query(
-      `INSERT INTO Users_has_Books (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
+      `INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
        VALUES (?, ?, NOW(), ?, ?, ?)`,
       [userId, bookId, read, rate, comment]
     );
