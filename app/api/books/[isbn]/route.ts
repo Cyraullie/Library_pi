@@ -1,45 +1,6 @@
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ isbn: string }> }
-) {
-  try {
-    const { isbn } = await params;
-
-    if (!isbn) {
-      return NextResponse.json({ error: "ISBN manquant" }, { status: 400 });
-    }
-
-    const result = await db.query(`
-      SELECT 
-        "Books".id,
-        "Books".isbn,
-        "Books".title,
-        "Books".author,
-        "Books".image,
-        "Books".publicationDate,
-        "Books".editor,
-        "Books".langage,
-        "Books".tome,
-        "BookType".type AS bookType
-      FROM library_pi."Books"
-      JOIN library_pi."BookType" ON "Books".BookType_id = "BookType".id
-      WHERE "Books".isbn = $1
-    `, [isbn]);
-
-    if (result.rows.length === 0) {
-      return NextResponse.json({ error: "Livre non trouvé" }, { status: 404 });
-    }
-
-    return NextResponse.json(result.rows[0]);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
-  }
-}
-
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ isbn: string }> }
@@ -52,29 +13,51 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const {
-      title,
-      author,
-      image,
-      publicationDate,
-      editor,
-      langage,
-      tome,
-      serie,
-    } = body;
 
-    if (tome < 1) {
-      return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
+    // 🔎 récupérer le livre actuel
+    const bookResult = await db.query(
+      'SELECT * FROM library_pi."Books" WHERE isbn = $1',
+      [isbn]
+    );
+
+    if (bookResult.rows.length === 0) {
+      return NextResponse.json({ error: "Livre non trouvé" }, { status: 404 });
     }
 
-    const formattedDate = publicationDate
-      ? new Date(publicationDate).toISOString().split("T")[0]
-      : null;
+    const current = bookResult.rows[0];
 
+    // 🧠 utiliser les anciennes valeurs si non définies
+    const title = body.title ?? current.title;
+    const author = body.author ?? current.author;
+    const image = body.image ?? current.image;
+    const editor = body.editor ?? current.editor;
+    const langage = body.langage ?? current.langage;
+    const tome = body.tome ?? current.tome;
+    const serie = body.serie ?? current.serie;
+
+    if (tome < 1) {
+      return NextResponse.json(
+        { error: "Champs tome doit être plus grand que 0" },
+        { status: 400 }
+      );
+    }
+
+    const formattedDate = body.publicationDate
+      ? new Date(body.publicationDate).toISOString().split("T")[0]
+      : current.publicationDate;
+
+    // ✏️ update
     await db.query(
       `UPDATE library_pi."Books"
-       SET title = $1, author = $2, image = $3, publicationDate = $4, 
-           editor = $5, langage = $6, tome = $7, serie = $8
+       SET 
+        title = $1,
+        author = $2,
+        image = $3,
+        "publicationDate" = $4,
+        editor = $5,
+        langage = $6,
+        tome = $7,
+        serie = $8
        WHERE isbn = $9`,
       [
         title,
@@ -90,6 +73,7 @@ export async function PATCH(
     );
 
     return NextResponse.json({ message: "Livre modifié" });
+
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
