@@ -10,11 +10,13 @@
     "prod": "npm run build && npm run start"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "bcrypt": "^6.0.0",
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.17.1",
     "next": "^15.5.12",
+    "pg": "^8.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
