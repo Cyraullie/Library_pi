@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 // -----------------------------------
 export async function GET() {
   console.log(Object.keys(process.env));
+  console.log("test")
   try {
     const [rows] = await db.query(`
       SELECT 
