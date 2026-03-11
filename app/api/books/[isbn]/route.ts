@@ -42,10 +42,6 @@ export async function PATCH(
       );
     }
 
-    const formattedDate = body.publicationDate
-      ? new Date(body.publicationDate).toISOString().split("T")[0]
-      : current.publicationDate;
-
     // ✏️ update
     await db.query(
       `UPDATE library_pi."Books"
@@ -53,17 +49,15 @@ export async function PATCH(
         title = $1,
         author = $2,
         image = $3,
-        "publicationDate" = $4,
-        editor = $5,
-        langage = $6,
-        tome = $7,
-        serie = $8
-       WHERE isbn = $9`,
+        editor = $4,
+        langage = $5,
+        tome = $6,
+        serie = $7
+       WHERE isbn = $8`,
       [
         title,
         author,
         image,
-        formattedDate,
         editor,
         langage,
         tome,
