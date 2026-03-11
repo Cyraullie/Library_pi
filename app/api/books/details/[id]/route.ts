@@ -47,7 +47,7 @@ export async function GET(
        FROM library_pi."Users_has_Books" uhb
        JOIN library_pi."Users" u ON u.id = uhb."users_id"
        WHERE uhb."books_id" = $1
-       AND uhb."read" = 1
+       AND uhb."read" = true
        AND uhb.comment IS NOT NULL
        AND uhb.comment != ''`,
       [bookId]
