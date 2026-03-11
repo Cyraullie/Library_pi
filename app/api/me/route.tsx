@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const userId = decoded.id;
 
     const [rows]: any = await db.query(
-      "SELECT id, username, email FROM library_pi."Users" WHERE id = ?",
+      'SELECT id, username, email FROM library_pi."Users" WHERE id = ?',
       [userId]
     );
 
