@@ -26,7 +26,7 @@ export async function GET(
         "BookType".type AS bookType
       FROM library_pi."Books"
       JOIN "BookType" ON "Books".BookType_id = "BookType".id
-      WHERE "Books".isbn = ?
+      WHERE "Books".isbn = $1
     `, [isbn]);
 
     if (rows.length === 0) {
@@ -76,9 +76,9 @@ export async function PATCH(
 
     await db.query(
       `UPDATE "Books" 
-       SET title = ?, author = ?, image = ?, publicationDate = ?, 
-           editor = ?, langage = ?, tome = ?, serie = ?
-       WHERE isbn = ?`,
+       SET title = $1, author = $2, image = $3, publicationDate = $4, 
+           editor = $5, langage = $6, tome = $7, serie = $8
+       WHERE isbn = $9`,
       [
         title,
         author,

@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
     }
     
-    const [existing]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = ?', [isbn]);
+    const [existing]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = $1', [isbn]);
 
     if (existing.length > 0) {
       return NextResponse.json({ message: "Livre déjà présent", id: existing[0].id });
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
     const [result]: any = await db.query(
       `INSERT INTO "Books" 
       (isbn, title, serie, author, image, publicationDate, editor, langage, tome, BookType_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
       [
         isbn,
         title,
@@ -106,7 +106,7 @@ export async function POST(request: Request) {
           // Ajoute le livre
           await db.query(
             `INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
-            VALUES (?, ?, NOW(), 0, 0, NULL)`,
+            VALUES ($1, $2, NOW(), 0, 0, NULL)`,
             [userId, rows[0].id,]
           );
     }

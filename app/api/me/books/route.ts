@@ -26,7 +26,7 @@ export async function GET(req: Request) {
         "Users_has_Books".rate
       FROM library_pi."Users_has_Books"
       JOIN "Books" ON "Users_has_Books".Books_id = "Books".id
-      WHERE "Users_has_Books".Users_id = ?
+      WHERE "Users_has_Books".Users_id = $1
     `, [userId]);
 
     return Response.json(rows);
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     // Récupère le livre par ISBN
-    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = ', [isbn]);
+    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = $1', [isbn]);
 
     if (books.length === 0) {
       return Response.json({ message: "Livre non trouvé" }, { status: 404 });
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
     // Vérifie si le livre existe déjà pour l'utilisateur
     const [existing]: any = await db.query(
-      'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = ? AND Books_id = ?',
+      'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = $1 AND Books_id = $2',
       [userId, bookId]
     );
 
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
     // Ajoute le livre
     await db.query(
       `INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
-       VALUES (?, ?, NOW(), ?, ?, ?)`,
+       VALUES ($1, $2, NOW(), $3, $4, $5)`,
       [userId, bookId, read, rate, comment]
     );
 

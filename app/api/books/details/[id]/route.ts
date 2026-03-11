@@ -15,7 +15,7 @@ export async function GET(
   try {
     // 📚 Infos livre
     const [books]: any = await db.query(
-      'SELECT * FROM library_pi."Books" WHERE id = ?',
+      'SELECT * FROM library_pi."Books" WHERE id = $1',
       [bookId]
     );
 
@@ -27,7 +27,7 @@ export async function GET(
 
     // ⭐ Moyenne des notes
     const [ratings]: any = await db.query(
-      'SELECT AVG(rate) as average, COUNT(rate) as total FROM library_pi."Users_has_Books" WHERE Books_id = ? AND rate IS NOT NULL',
+      'SELECT AVG(rate) as average, COUNT(rate) as total FROM library_pi."Users_has_Books" WHERE Books_id = $1 AND rate IS NOT NULL',
       [bookId]
     );
 
@@ -36,7 +36,7 @@ export async function GET(
       `SELECT u.username, uhb.comment, uhb.rate
        FROM library_pi."Users_has_Books" uhb
        JOIN "Users" u ON u.id = uhb.Users_id
-       WHERE uhb.Books_id = ? AND uhb.read = 1 AND uhb.comment != ""`,
+       WHERE uhb.Books_id = $1 AND uhb.read = 1 AND uhb.comment != ""`,
       [bookId]
     );
 

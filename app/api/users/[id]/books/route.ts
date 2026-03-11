@@ -32,7 +32,7 @@ export async function GET(
       FROM library_pi."Users_has_Books"
       JOIN "Books" ON "Users_has_Books".Books_id = "Books".id
       JOIN "BookType" ON "Books".BookType_id = "BookType".id
-      WHERE "Users_has_Books".Users_id = ?
+      WHERE "Users_has_Books".Users_id = $1
     `, [userId]);
 
     return NextResponse.json(rows);
@@ -57,7 +57,7 @@ export async function POST(
     }
 
     // Vérifier que le livre existe dans le catalogue global
-    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = ?', [isbn]);
+    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = $1', [isbn]);
     if (books.length === 0) {
       return NextResponse.json({ error: "Livre non trouvé dans le catalogue global" }, { status: 404 });
     }
@@ -66,7 +66,7 @@ export async function POST(
 
     // Vérifie si l'utilisateur a déjà ce livre
     const [existing]: any = await db.query(
-      'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = ? AND Books_id = ?',
+      'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = $1 AND Books_id = $2',
       [userId, bookId]
     );
 
@@ -77,7 +77,7 @@ export async function POST(
     // Ajouter le livre à l'utilisateur
     await db.query(
 		`INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
-		VALUES (?, ?, NOW(), ?, ?, ?)`,
+		VALUES ($1, $2, NOW(), $3, $4, $5)`,
       [userId, bookId, read, rate, comment]
     );
 
