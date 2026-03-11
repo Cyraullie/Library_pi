@@ -13,7 +13,7 @@ export async function GET(
       return NextResponse.json({ error: "ID utilisateur invalide" }, { status: 400 });
     }
 
-    const [rows]: any = await db.query(`
+    const result = await db.query(`
       SELECT 
         "Books".id,
         "Books".isbn,
@@ -26,7 +26,7 @@ export async function GET(
         "Books".tome,
         "BookType".type AS bookType,
         "Users_has_Books".timestamp,
-        "Users_has_Books".\`read\`,
+        "Users_has_Books".read,
         "Users_has_Books".rate,
         "Users_has_Books".comment
       FROM library_pi."Users_has_Books"
@@ -35,7 +35,7 @@ export async function GET(
       WHERE "Users_has_Books".Users_id = $1
     `, [userId]);
 
-    return NextResponse.json(rows);
+    return NextResponse.json(result.rows);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
@@ -57,27 +57,27 @@ export async function POST(
     }
 
     // Vérifier que le livre existe dans le catalogue global
-    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = $1', [isbn]);
-    if (books.length === 0) {
+    const booksResult = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = $1', [isbn]);
+    if (booksResult.rows.length === 0) {
       return NextResponse.json({ error: "Livre non trouvé dans le catalogue global" }, { status: 404 });
     }
 
-    const bookId = books[0].id;
+    const bookId = booksResult.rows[0].id;
 
     // Vérifie si l'utilisateur a déjà ce livre
-    const [existing]: any = await db.query(
+    const existingResult = await db.query(
       'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = $1 AND Books_id = $2',
       [userId, bookId]
     );
 
-    if (existing.length > 0) {
+    if (existingResult.rows.length > 0) {
       return NextResponse.json({ message: "Livre déjà ajouté à cet utilisateur" });
     }
 
     // Ajouter le livre à l'utilisateur
     await db.query(
-		`INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, \`read\`, rate, \`comment\`)
-		VALUES ($1, $2, NOW(), $3, $4, $5)`,
+      `INSERT INTO "Users_has_Books" (Users_id, Books_id, timestamp, read, rate, comment)
+       VALUES ($1, $2, NOW(), $3, $4, $5)`,
       [userId, bookId, read, rate, comment]
     );
 

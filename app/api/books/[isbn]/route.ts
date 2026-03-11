@@ -12,7 +12,7 @@ export async function GET(
       return NextResponse.json({ error: "ISBN manquant" }, { status: 400 });
     }
 
-    const [rows]: any = await db.query(`
+    const result = await db.query(`
       SELECT 
         "Books".id,
         "Books".isbn,
@@ -25,15 +25,15 @@ export async function GET(
         "Books".tome,
         "BookType".type AS bookType
       FROM library_pi."Books"
-      JOIN "BookType" ON "Books".BookType_id = "BookType".id
+      JOIN library_pi."BookType" ON "Books".BookType_id = "BookType".id
       WHERE "Books".isbn = $1
     `, [isbn]);
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
       return NextResponse.json({ error: "Livre non trouvé" }, { status: 404 });
     }
 
-    return NextResponse.json(rows[0]);
+    return NextResponse.json(result.rows[0]);
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
@@ -44,16 +44,14 @@ export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ isbn: string }> }
 ) {
-
-
   try {
     const { isbn } = await params;
 
     if (!isbn) {
       return NextResponse.json({ error: "Invalid ISBN" }, { status: 400 });
     }
-    const body = await req.json();
 
+    const body = await req.json();
     const {
       title,
       author,
@@ -65,8 +63,7 @@ export async function PATCH(
       serie,
     } = body;
 
-    if (tome < 1)
-    {
+    if (tome < 1) {
       return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
     }
 
@@ -75,7 +72,7 @@ export async function PATCH(
       : null;
 
     await db.query(
-      `UPDATE "Books" 
+      `UPDATE library_pi."Books"
        SET title = $1, author = $2, image = $3, publicationDate = $4, 
            editor = $5, langage = $6, tome = $7, serie = $8
        WHERE isbn = $9`,

@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET; // À mettre dans .env.local
-
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
@@ -14,8 +12,8 @@ export async function POST(request: Request) {
     }
 
     // Vérifier si l'utilisateur existe
-    const [rows]: any = await db.query('SELECT * FROM library_pi."Users" WHERE email = $1', [email]);
-    const user = rows[0];
+    const result = await db.query('SELECT * FROM library_pi."Users" WHERE email = $1', [email]);
+    const user = result.rows[0];
 
     if (!user) {
       return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
@@ -27,16 +25,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Mot de passe incorrect" }, { status: 401 });
     }
 
-  if (!process.env.NEXT_PUBLIC_JWT_SECRET) {
-    throw new Error("JWT_SECRET n'est pas défini dans .env");
-  }
+    if (!process.env.NEXT_PUBLIC_JWT_SECRET) {
+      throw new Error("JWT_SECRET n'est pas défini dans .env");
+    }
 
-  const token = jwt.sign(
-    { id: user.id, username: user.username, email: user.email },
-    process.env.NEXT_PUBLIC_JWT_SECRET, // TypeScript sait maintenant que c'est défini
-    { expiresIn: "7d" }
-  );
-
+    const token = jwt.sign(
+      { id: user.id, username: user.username, email: user.email },
+      process.env.NEXT_PUBLIC_JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
     return NextResponse.json({ message: "Login réussi", token });
   } catch (error) {

@@ -1,3 +1,4 @@
+// app/api/books/[id]/route.ts
 import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
@@ -14,10 +15,11 @@ export async function GET(
 
   try {
     // 📚 Infos livre
-    const [books]: any = await db.query(
+    const bookResult = await db.query(
       'SELECT * FROM library_pi."Books" WHERE id = $1',
       [bookId]
     );
+    const books = bookResult.rows;
 
     if (!books.length) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
@@ -26,24 +28,26 @@ export async function GET(
     const book = books[0];
 
     // ⭐ Moyenne des notes
-    const [ratings]: any = await db.query(
+    const ratingsResult = await db.query(
       'SELECT AVG(rate) as average, COUNT(rate) as total FROM library_pi."Users_has_Books" WHERE Books_id = $1 AND rate IS NOT NULL',
       [bookId]
     );
+    const ratings = ratingsResult.rows[0];
 
     // 💬 Commentaires
-    const [comments]: any = await db.query(
+    const commentsResult = await db.query(
       `SELECT u.username, uhb.comment, uhb.rate
        FROM library_pi."Users_has_Books" uhb
-       JOIN "Users" u ON u.id = uhb.Users_id
-       WHERE uhb.Books_id = $1 AND uhb.read = 1 AND uhb.comment != ""`,
+       JOIN library_pi."Users" u ON u.id = uhb.Users_id
+       WHERE uhb.Books_id = $1 AND uhb.read = 1 AND uhb.comment != ''`,
       [bookId]
     );
+    const comments = commentsResult.rows;
 
     return NextResponse.json({
       book,
-      averageRating: ratings[0].average || 0,
-      totalRatings: ratings[0].total || 0,
+      averageRating: ratings?.average || 0,
+      totalRatings: ratings?.total || 0,
       comments,
     });
   } catch (err) {
