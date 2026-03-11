@@ -6,11 +6,8 @@ import jwt from "jsonwebtoken";
 // GET → liste tous les livres
 // -----------------------------------
 export async function GET() {
-  return NextResponse.json(Object.keys(process.env));
-  console.log(Object.keys(process.env));
-  console.log("test")
   try {
-    const [rows] = await db.query(`
+    const result = await db.query(`
       SELECT 
         Books.id,
         Books.isbn,
@@ -26,7 +23,7 @@ export async function GET() {
       FROM Books
       JOIN BookType ON Books.BookType_id = BookType.id
     `);
-
+    const rows = result.rows;
     return NextResponse.json(rows);
   } catch (error) {
     console.error(error);
@@ -95,7 +92,7 @@ export async function POST(request: Request) {
           }
       
           const token = auth.split(" ")[1];
-          const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
+          const decoded: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET!) as { id: number; email: string; username: string };
           const userId = decoded.id; // ou decoded.userId selon ton token
 
           const [rows]: any = await db.query(`

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET; // À mettre dans .env.local
+const JWT_SECRET = process.env.NEXT_PUBLIC_JWT_SECRET; // À mettre dans .env.local
 
 export async function POST(request: Request) {
   try {
@@ -29,13 +29,13 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json({ error: "Utilisateur non trouvé" }, { status: 404 });
     }
-    if (!process.env.JWT_SECRET) {
+    if (!process.env.NEXT_PUBLIC_JWT_SECRET) {
       throw new Error("JWT_SECRET n'est pas défini dans .env");
     }
 
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
-      process.env.JWT_SECRET, // TypeScript sait maintenant que c'est défini
+      process.env.NEXT_PUBLIC_JWT_SECRET, // TypeScript sait maintenant que c'est défini
       { expiresIn: "7d" }
     );
 

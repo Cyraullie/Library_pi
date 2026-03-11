@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     }
 
     // decode token
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; email: string; username: string };
+    const decoded: any = jwt.verify(token, process.env.NEXT_PUBLIC_JWT_SECRET!) as { id: number; email: string; username: string };
 
     const userId = decoded.id;
 

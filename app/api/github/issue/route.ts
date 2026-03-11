@@ -4,7 +4,7 @@ export async function POST(req: Request) {
   try {
     const { title, body } = await req.json();
 
-    if (!process.env.GITHUB_TOKEN) {
+    if (!process.env.NEXT_PUBLIC_GITHUB_TOKEN) {
       return NextResponse.json(
         { error: "Missing GITHUB_TOKEN in .env.local" },
         { status: 500 }
@@ -28,12 +28,12 @@ ${body}
 `
 
     const response = await fetch(
-      "https://api.github.com/repos/" + process.env.GITHUB_REPO + "/issues", // ⚠️ adapte si besoin
+      "https://api.github.com/repos/" + process.env.NEXT_PUBLIC_GITHUB_REPO + "/issues", // ⚠️ adapte si besoin
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
           Accept: "application/vnd.github+json",
         },
         body: JSON.stringify({
