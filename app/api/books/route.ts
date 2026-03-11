@@ -20,7 +20,7 @@ export async function GET() {
         Books.langage,
         Books.tome,
         BookType.type as bookType
-      FROM Books
+      FROM library_pi.Books
       JOIN BookType ON Books.BookType_id = BookType.id
     `);
     const rows = result.rows;
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
     }
     
-    const [existing]: any = await db.query("SELECT id FROM Books WHERE isbn = ?", [isbn]);
+    const [existing]: any = await db.query("SELECT id FROM library_pi.Books WHERE isbn = ?", [isbn]);
 
     if (existing.length > 0) {
       return NextResponse.json({ message: "Livre déjà présent", id: existing[0].id });
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
 
           const [rows]: any = await db.query(`
             SELECT id
-            FROM Books
+            FROM library_pi.Books
             ORDER BY id DESC
             LIMIT 1;
           `);

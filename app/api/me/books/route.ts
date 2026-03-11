@@ -24,7 +24,7 @@ export async function GET(req: Request) {
         Books.tome,
         Users_has_Books.read,
         Users_has_Books.rate
-      FROM Users_has_Books
+      FROM library_pi.Users_has_Books
       JOIN Books ON Users_has_Books.Books_id = Books.id
       WHERE Users_has_Books.Users_id = ?
     `, [userId]);
@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     }
 
     // Récupère le livre par ISBN
-    const [books]: any = await db.query("SELECT id FROM Books WHERE isbn = ?", [isbn]);
+    const [books]: any = await db.query("SELECT id FROM library_pi.Books WHERE isbn = ?", [isbn]);
 
     if (books.length === 0) {
       return Response.json({ message: "Livre non trouvé" }, { status: 404 });
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
 
     // Vérifie si le livre existe déjà pour l'utilisateur
     const [existing]: any = await db.query(
-      "SELECT * FROM Users_has_Books WHERE Users_id = ? AND Books_id = ?",
+      "SELECT * FROM library_pi.Users_has_Books WHERE Users_id = ? AND Books_id = ?",
       [userId, bookId]
     );
 

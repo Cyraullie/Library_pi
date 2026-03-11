@@ -20,7 +20,7 @@ export async function DELETE(
     if (isNaN(bookId)) return NextResponse.json({ error: "Invalid book ID" }, { status: 400 });
 
     await db.query(
-      "DELETE FROM Users_has_Books WHERE Users_id = ? AND Books_id = ?",
+      "DELETE FROM library_pi.Users_has_Books WHERE Users_id = ? AND Books_id = ?",
       [userId, bookId]
     );
 

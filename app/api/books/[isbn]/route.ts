@@ -24,7 +24,7 @@ export async function GET(
         Books.langage,
         Books.tome,
         BookType.type AS bookType
-      FROM Books
+      FROM library_pi.Books
       JOIN BookType ON Books.BookType_id = BookType.id
       WHERE Books.isbn = ?
     `, [isbn]);
