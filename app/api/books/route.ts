@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Champs tome doit être plus grand que 0" }, { status: 400 });
     }
     
-    const [existing]: any = await db.query("SELECT id FROM library_pi."Books" WHERE isbn = ?", [isbn]);
+    const [existing]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = ?', [isbn]);
 
     if (existing.length > 0) {
       return NextResponse.json({ message: "Livre déjà présent", id: existing[0].id });
