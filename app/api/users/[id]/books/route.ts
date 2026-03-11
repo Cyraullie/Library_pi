@@ -57,7 +57,7 @@ export async function POST(
     }
 
     // Vérifier que le livre existe dans le catalogue global
-    const [books]: any = await db.query("SELECT id FROM library_pi."Books" WHERE isbn = ?", [isbn]);
+    const [books]: any = await db.query('SELECT id FROM library_pi."Books" WHERE isbn = ?', [isbn]);
     if (books.length === 0) {
       return NextResponse.json({ error: "Livre non trouvé dans le catalogue global" }, { status: 404 });
     }
@@ -66,7 +66,7 @@ export async function POST(
 
     // Vérifie si l'utilisateur a déjà ce livre
     const [existing]: any = await db.query(
-      "SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = ? AND Books_id = ?",
+      'SELECT * FROM library_pi."Users_has_Books" WHERE Users_id = ? AND Books_id = ?',
       [userId, bookId]
     );
 
