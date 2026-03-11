@@ -32,7 +32,7 @@ export async function GET(
         AVG(rate) AS average,
         COUNT(rate) AS total
        FROM library_pi."Users_has_Books"
-       WHERE "Books_id" = $1 AND rate IS NOT NULL`,
+       WHERE "books_id" = $1 AND rate IS NOT NULL`,
       [bookId]
     );
 
